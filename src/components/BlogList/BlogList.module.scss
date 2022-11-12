@@ -1,0 +1,52 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &__article {
+    width: 80%;
+    margin: 24px 0;
+  }
+}
+.article_header {
+  display: flex;
+  justify-content: space-between;
+}
+.article_info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.article_title {
+  margin-right: 8px;
+  &:hover {
+    color: #1890ff;
+  }
+}
+.article_headerer {
+  display: flex;
+  align-items: baseline;
+}
+.article_tags {
+  display: flex;
+}
+.article_tag {
+  width: fit-content;
+  height: min-content;
+  margin-right: 4px;
+}
+.article_autor {
+  display: flex;
+}
+.article_autorInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: smaller;
+  padding: 0 8px;
+  color: grey;
+  span:first-of-type {
+    color: black;
+    font-weight: bolder;
+    font-size: medium;
+  }
+}

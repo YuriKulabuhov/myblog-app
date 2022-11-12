@@ -1,0 +1,69 @@
+.main__article {
+  width: 80%;
+  margin: 24px auto;
+  &_description {
+    font-style: italic;
+    font-weight: 100;
+  }
+  &_body {
+    font-size: large;
+  }
+}
+.article_header {
+  display: flex;
+  justify-content: space-between;
+}
+.article_info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.article_headerer {
+  display: flex;
+  align-items: stretch;
+}
+.article_title {
+  margin-right: 8px;
+}
+.article_tagS {
+  display: flex;
+}
+.article_tag {
+  width: fit-content;
+  height: min-content;
+  margin-right: 4px;
+}
+.article_autor {
+  display: flex;
+}
+.article_autorInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: smaller;
+  padding: 0 8px;
+  color: grey;
+  span:first-of-type {
+    color: black;
+    font-weight: bolder;
+    font-size: medium;
+  }
+}
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.signInBlock {
+  align-items: flex-start;
+  button {
+    margin: 0 10px;
+  }
+  .signIn {
+    color: red;
+    border-color: red;
+  }
+  .signUp {
+    color: rgb(17, 219, 17);
+    border-color: rgb(17, 219, 17);
+  }
+}
