@@ -1,6 +1,7 @@
 import classes from './Article.module.scss';
 import * as api from '../../api/api';
 import { v4 as uuidv4 } from 'uuid';
+import ReactMarkdown from 'react-markdown';
 import intlFormat from 'date-fns/intlFormat';
 import { useDispatch, useSelector } from 'react-redux';
 import { MagnifyingGlass } from 'react-loader-spinner';
@@ -112,7 +113,9 @@ export default function Article() {
       <div className={classes.wrapper}>
         <div>
           <h4 className={classes.main__article_description}>{currentArticle.description}</h4>
-          <span className={classes.main__article_body}>{currentArticle.body}</span>
+          <span className={classes.main__article_body}>
+            <ReactMarkdown>{currentArticle.body}</ReactMarkdown>
+          </span>
         </div>
         {userData.user !== null && userData.user.username === currentArticle.author.username && (
           <div className={classes.signInBlock}>
