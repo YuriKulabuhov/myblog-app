@@ -1,17 +1,30 @@
 import classes from './CreateArticle.module.scss';
 import * as api from '../../../api/api';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Card, Space } from 'antd';
+import { Button, Form, Input, Card, Space, Result, Link } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 export default function CreateArticle() {
   const navigate = useNavigate();
+  const { userData } = useSelector((state) => state);
   const onFinish = (values) => {
     const tagsList = values.tags || [];
     api.postNewArticle(values.title, values.description, values.body, tagsList);
     navigate('/articles');
   };
-  return (
+  return userData.auth === false ? (
+    <Result
+      title="You are denied access, go through authorization!"
+      extra={[
+        <Link to="/sign-in" key="consoleMoreNone">
+          <Button type="primary" key="consoleMore" size="large">
+            Sign In
+          </Button>
+        </Link>,
+      ]}
+    />
+  ) : (
     <Card className={classes.createArticle__form}>
       <h3>Create new article</h3>
       <Form
