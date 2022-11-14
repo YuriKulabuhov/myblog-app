@@ -19,7 +19,7 @@ export const getRandomArticles = (valuePage) => {
       .then((res) => {
         dispatch(actions.getAllArticles(res.data));
       })
-      .catch((error) => dispatch(actions.getError(error.message)));
+      .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
   };
 };
 export const getArticlesItem = (slug) => {
@@ -32,10 +32,10 @@ export const getArticlesItem = (slug) => {
       .then((res) => {
         dispatch(actions.getCurrentArticle(res.data));
       })
-      .catch((er) => dispatch(actions.getError(er.message)));
+      .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
   };
 };
-export const postFavorited = (slug) => {
+export const postFavorited = (slug, dispatch, isArrayValue) => {
   const token = localStorage.getItem('token');
   return axios
     .post(
@@ -46,18 +46,26 @@ export const postFavorited = (slug) => {
       }
     )
     .then((res) => {
-      infoStatus(`Favorited: ${res.statusText}`);
+      dispatch(
+        isArrayValue
+          ? actions.changeFavoriteInArticles(res.data)
+          : actions.changeFavoritedArticle(res.data)
+      );
     })
     .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
 };
-export const deleteFavorited = (slug) => {
+export const deleteFavorited = (slug, dispatch, isArrayValue) => {
   const token = localStorage.getItem('token');
   return axios
     .delete(`https://blog.kata.academy/api/articles/${slug}/favorite`, {
       headers: { Authorization: `Token ${token}` },
     })
     .then((res) => {
-      infoStatus(`Unfavorited: ${res.statusText}`);
+      dispatch(
+        isArrayValue
+          ? actions.changeFavoriteInArticles(res.data)
+          : actions.changeFavoritedArticle(res.data)
+      );
     })
     .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
 };

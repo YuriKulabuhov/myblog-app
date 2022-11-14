@@ -20,8 +20,8 @@ export default function BlogList() {
   }, [offset]);
   const changeMyHeart = (article) => {
     if (article.favorited) {
-      api.deleteFavorited(article.slug);
-    } else api.postFavorited(article.slug);
+      api.deleteFavorited(article.slug, dispatch, true);
+    } else api.postFavorited(article.slug, dispatch, true);
   };
   const releaseData = (releaseDate = '') => {
     if (releaseDate !== '') {

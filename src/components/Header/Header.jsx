@@ -36,7 +36,7 @@ export default function Header() {
         <div className={classes.logOutBlock}>
           <Link to="/new-article">
             <Button className={classes.createNewArticle} size="large" type="text">
-              Create artile
+              Create article
             </Button>
           </Link>
           <Link to="profile">

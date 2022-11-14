@@ -1,7 +1,7 @@
 import classes from './Profile.module.scss';
 import * as api from '../../api/api';
 import { Link } from 'react-router-dom';
-import { Button, Form, Input, Card, message, Result } from 'antd';
+import { Button, Form, Input, Card, Result } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Profile() {

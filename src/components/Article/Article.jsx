@@ -33,8 +33,8 @@ export default function Article() {
   };
   const changeMyHeart = (article) => {
     if (article.favorited) {
-      api.deleteFavorited(article.slug);
-    } else api.postFavorited(article.slug);
+      api.deleteFavorited(article.slug, dispatch, false);
+    } else api.postFavorited(article.slug, dispatch, false);
   };
   const releaseData = (releaseDate = '') => {
     if (releaseDate !== '') {

@@ -1,27 +1,28 @@
 import { combineReducers } from 'redux';
 
 const initialState = {
+  articles: null,
   currentArticle: null,
-  error: { count: 0, message: '' },
 };
-function serviceReducer(
-  state = initialState,
-  { type, articles, articlesCount, article, errorMessage } = {}
-) {
+function serviceReducer(state = initialState, { type, articles, articlesCount, article } = {}) {
   switch (type) {
-    case 'GET_ERROR':
-      return { ...state, error: { count: state.error.count + 1, message: errorMessage } };
     case 'GET_ALL_ARTICLES': {
       return {
         ...state,
         articles,
         articlesCount,
         currentArticle: null,
-        error: { count: 0, message: '' },
       };
     }
     case 'GET_CURRENT_ARTICLE': {
       return { ...state, currentArticle: article };
+    }
+    case 'FAVORITED_CURRENT_ARTICLE': {
+      return { ...state, currentArticle: article };
+    }
+    case 'FAVORITE_IN_ARTICLES': {
+      const result = state.articles.map((ar) => (ar.slug === article.slug ? article : ar));
+      return { ...state, articles: result };
     }
     default:
       return state;

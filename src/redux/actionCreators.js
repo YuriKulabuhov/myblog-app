@@ -8,9 +8,13 @@ export const getCurrentArticle = ({ article }) => ({
   type: 'GET_CURRENT_ARTICLE',
   article,
 });
-export const getError = (errorMessage) => ({
-  type: 'GET_ERROR',
-  errorMessage,
+export const changeFavoritedArticle = ({ article }) => ({
+  type: 'FAVORITED_CURRENT_ARTICLE',
+  article,
+});
+export const changeFavoriteInArticles = ({ article }) => ({
+  type: 'FAVORITE_IN_ARTICLES',
+  article,
 });
 // optionsUsersActions
 export const postUserLogIn = (user) => ({
