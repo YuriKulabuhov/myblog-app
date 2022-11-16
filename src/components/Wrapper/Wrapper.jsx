@@ -24,7 +24,7 @@ export default function Wrapper() {
         <Header />
       </PageHeader>
       <Outlet />
-      <Footer className={classes.footer}>Сайт создан при поддержке штанов</Footer>
+      <Footer className={classes.footer} />
     </Layout>
   );
 }

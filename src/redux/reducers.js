@@ -3,8 +3,12 @@ import { combineReducers } from 'redux';
 const initialState = {
   articles: null,
   currentArticle: null,
+  offset: 0,
 };
-function serviceReducer(state = initialState, { type, articles, articlesCount, article } = {}) {
+function serviceReducer(
+  state = initialState,
+  { type, articles, articlesCount, article, offsetCount } = {}
+) {
   switch (type) {
     case 'GET_ALL_ARTICLES': {
       return {
@@ -13,6 +17,9 @@ function serviceReducer(state = initialState, { type, articles, articlesCount, a
         articlesCount,
         currentArticle: null,
       };
+    }
+    case 'PUT_OFFSET': {
+      return { ...state, offset: offsetCount };
     }
     case 'GET_CURRENT_ARTICLE': {
       return { ...state, currentArticle: article };

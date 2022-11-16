@@ -2,8 +2,11 @@ import axios from 'axios';
 import * as actions from '../redux/actionCreators';
 import { message } from 'antd';
 
-const infoStatus = (status) => {
-  message.info(status);
+const successStatus = (status) => {
+  message.success(status);
+};
+const errorStatus = (status) => {
+  message.error(status);
 };
 export const getRandomArticles = (valuePage) => {
   const token = localStorage.getItem('token');
@@ -19,7 +22,7 @@ export const getRandomArticles = (valuePage) => {
       .then((res) => {
         dispatch(actions.getAllArticles(res.data));
       })
-      .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+      .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
   };
 };
 export const getArticlesItem = (slug) => {
@@ -32,7 +35,7 @@ export const getArticlesItem = (slug) => {
       .then((res) => {
         dispatch(actions.getCurrentArticle(res.data));
       })
-      .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+      .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
   };
 };
 export const postFavorited = (slug, dispatch, isArrayValue) => {
@@ -52,7 +55,7 @@ export const postFavorited = (slug, dispatch, isArrayValue) => {
           : actions.changeFavoritedArticle(res.data)
       );
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
 };
 export const deleteFavorited = (slug, dispatch, isArrayValue) => {
   const token = localStorage.getItem('token');
@@ -67,7 +70,7 @@ export const deleteFavorited = (slug, dispatch, isArrayValue) => {
           : actions.changeFavoritedArticle(res.data)
       );
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
 };
 export const postNewUser = (usernameValue, emailValue, passwordValue) => {
   return axios
@@ -78,10 +81,13 @@ export const postNewUser = (usernameValue, emailValue, passwordValue) => {
         password: passwordValue,
       },
     })
-    .then((res) => {
-      infoStatus(res.statusText);
+    .then(() => {
+      return true;
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => {
+      errorStatus(`An error has occurred. ${er.message}`);
+      return false;
+    });
 };
 export const postLogIn = (emailValue, passwordValue, dispatch) => {
   return axios
@@ -94,8 +100,13 @@ export const postLogIn = (emailValue, passwordValue, dispatch) => {
     .then((res) => {
       dispatch(actions.postUserLogIn(res.data.user));
       localStorage.setItem('token', res.data.user.token);
+      successStatus("You're welcome!");
+      return true;
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => {
+      errorStatus(`An error has occurred. ${er.message}`);
+      return false;
+    });
 };
 export const putCreatedUser = (usernameValue, emailValue, passwordValue, imageValue, dispatch) => {
   const token = localStorage.getItem('token');
@@ -118,7 +129,7 @@ export const putCreatedUser = (usernameValue, emailValue, passwordValue, imageVa
       dispatch(actions.postUserLogIn(res.data.user));
       localStorage.token = res.data.user.token;
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
 };
 export const putEditArticle = (slug, titleValue, descriptionValue, bodyValue, tagsListValue) => {
   const token = localStorage.getItem('token');
@@ -138,9 +149,9 @@ export const putEditArticle = (slug, titleValue, descriptionValue, bodyValue, ta
       }
     )
     .then((res) => {
-      infoStatus(`Edit status:${res.statusText}`);
+      successStatus(`Edit status:${res.statusText}`);
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
 };
 export const deleteArticlesItem = (slug) => {
   const token = localStorage.getItem('token');
@@ -149,9 +160,9 @@ export const deleteArticlesItem = (slug) => {
       headers: { Authorization: `Token ${token}` },
     })
     .then((res) => {
-      infoStatus('Aricle deleted');
+      successStatus('Aricle deleted');
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
 };
 export const getUserData = (dispatch) => {
   const token = localStorage.getItem('token');
@@ -164,7 +175,7 @@ export const getUserData = (dispatch) => {
     })
     .catch((er) => {
       localStorage.clear();
-      infoStatus(`You're log out. ${er.message}`);
+      errorStatus(`You're log out. ${er.message}`);
     });
 };
 export const postNewArticle = (titleValue, descriptionValue, bodyValue, tagsListValue) => {
@@ -185,7 +196,7 @@ export const postNewArticle = (titleValue, descriptionValue, bodyValue, tagsList
       }
     )
     .then((res) => {
-      infoStatus(res.statusText);
+      successStatus(res.statusText);
     })
-    .catch((er) => infoStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
 };

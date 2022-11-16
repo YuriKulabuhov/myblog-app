@@ -14,7 +14,7 @@ export default function CreateArticle() {
     api.postNewArticle(values.title, values.description, values.body, tagsList);
     navigate('/articles');
   };
-  return userData.auth === false ? (
+  return !userData.auth ? (
     <Result
       title="You are denied access, go through authorization!"
       extra={[

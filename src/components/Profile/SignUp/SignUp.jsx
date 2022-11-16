@@ -7,8 +7,9 @@ import { useState } from 'react';
 export default function SignUp() {
   const [successful, setSuccessful] = useState(false);
   const onFinish = (values) => {
-    api.postNewUser(values.username, values.email, values.password);
-    setSuccessful(true);
+    api
+      .postNewUser(values.username, values.email, values.password)
+      .then((res) => (res ? setSuccessful(true) : null));
   };
   return successful ? (
     <Result

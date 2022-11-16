@@ -1,7 +1,7 @@
 import classes from './EditArticle.module.scss';
 import * as api from '../../../api/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Form, Input, Card, Space } from 'antd';
+import { Button, Form, Input, Card, Space, Result } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -12,6 +12,7 @@ export default function EditArticle() {
   const navigate = useNavigate();
   const { slug } = useParams();
   const { currentArticle } = useSelector((state) => state.services);
+  const { userData } = useSelector((state) => state);
   useEffect(() => {
     dispatch(api.getArticlesItem(slug));
   }, [slug]);
@@ -31,7 +32,9 @@ export default function EditArticle() {
       glassColor="#11db11"
       color="#000000"
     />
-  ) : (
+  ) : !userData.auth ? (
+    navigate('/sign-in')
+  ) : userData.user.username === currentArticle.author.username ? (
     <Card className={classes.createArticle__form}>
       <h3>Edit article</h3>
       <Form
@@ -123,5 +126,7 @@ export default function EditArticle() {
         </Form.Item>
       </Form>
     </Card>
+  ) : (
+    <Result title="You don't have enough rights to edit someone else's article" />
   );
 }

@@ -1,9 +1,10 @@
 import classes from './BlogList.module.scss';
 import intlFormat from 'date-fns/intlFormat';
+import * as actions from '../../redux/actionCreators';
 import { MagnifyingGlass } from 'react-loader-spinner';
 import { v4 as uuidv4 } from 'uuid';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import * as api from '../../api/api';
 import { HeartTwoTone } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,8 +14,8 @@ const { Content } = Layout;
 
 export default function BlogList() {
   const dispatch = useDispatch();
-  const [offset, setOffset] = useState(0);
-  const { articles, articlesCount, error } = useSelector((state) => state.services);
+  const { userData } = useSelector((state) => state);
+  const { articles, articlesCount, offset } = useSelector((state) => state.services);
   useEffect(() => {
     dispatch(api.getRandomArticles(offset));
   }, [offset]);
@@ -69,13 +70,17 @@ export default function BlogList() {
                       valueStyle={{ fontSize: '18px' }}
                       value={article.favoritesCount}
                       prefix={
-                        <HeartTwoTone
-                          onClick={() => {
-                            changeMyHeart(article);
-                          }}
-                          twoToneColor={article.favorited ? '#EB0081' : '#C6C0C6'}
-                          style={{ fontSize: '18px' }}
-                        />
+                        userData.auth ? (
+                          <HeartTwoTone
+                            onClick={() => {
+                              changeMyHeart(article);
+                            }}
+                            twoToneColor={article.favorited ? '#EB0081' : '#C6C0C6'}
+                            style={{ fontSize: '18px' }}
+                          />
+                        ) : (
+                          <HeartTwoTone twoToneColor="#C6C0C6" style={{ fontSize: '18px' }} />
+                        )
                       }
                     />
                   </div>
@@ -110,8 +115,8 @@ export default function BlogList() {
       <Pagination
         showSizeChanger={false}
         pageSize={5}
-        onChange={(page) => setOffset((page - 1) * 5)}
-        defaultCurrent={1}
+        onChange={(page) => dispatch(actions.putOffset((page - 1) * 5))}
+        defaultCurrent={offset / 5 + 1}
         total={articlesCount}
       />
     </Content>

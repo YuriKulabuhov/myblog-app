@@ -4,6 +4,10 @@ export const getAllArticles = ({ articles, articlesCount }) => ({
   articles,
   articlesCount,
 });
+export const putOffset = (offsetCount) => ({
+  type: 'PUT_OFFSET',
+  offsetCount,
+});
 export const getCurrentArticle = ({ article }) => ({
   type: 'GET_CURRENT_ARTICLE',
   article,

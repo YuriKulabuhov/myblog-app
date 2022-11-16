@@ -8,8 +8,9 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onFinish = (values) => {
-    api.postLogIn(values.email, values.password, dispatch);
-    navigate('/articles');
+    api
+      .postLogIn(values.email, values.password, dispatch)
+      .then((res) => (res ? navigate('/articles') : null));
   };
   return (
     <Card className={classes.signIn__form}>

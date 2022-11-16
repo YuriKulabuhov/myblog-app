@@ -6,7 +6,7 @@ import intlFormat from 'date-fns/intlFormat';
 import { useDispatch, useSelector } from 'react-redux';
 import { MagnifyingGlass } from 'react-loader-spinner';
 import { ExclamationCircleOutlined, HeartTwoTone } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Card, Avatar, Tag, Statistic, Button, Modal } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ export default function Article() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currentArticle, error } = useSelector((state) => state.services);
+  const { currentArticle } = useSelector((state) => state.services);
   const { userData } = useSelector((state) => state);
   useEffect(() => {
     dispatch(api.getArticlesItem(slug));
@@ -77,13 +77,17 @@ export default function Article() {
                 valueStyle={{ fontSize: '18px' }}
                 value={currentArticle.favoritesCount}
                 prefix={
-                  <HeartTwoTone
-                    onClick={() => {
-                      changeMyHeart(currentArticle);
-                    }}
-                    twoToneColor={currentArticle.favorited ? '#EB0081' : '#C6C0C6'}
-                    style={{ fontSize: '18px' }}
-                  />
+                  userData.auth ? (
+                    <HeartTwoTone
+                      onClick={() => {
+                        changeMyHeart(currentArticle);
+                      }}
+                      twoToneColor={currentArticle.favorited ? '#EB0081' : '#C6C0C6'}
+                      style={{ fontSize: '18px' }}
+                    />
+                  ) : (
+                    <HeartTwoTone twoToneColor="#C6C0C6" style={{ fontSize: '18px' }} />
+                  )
                 }
               />
             </div>
