@@ -19,7 +19,7 @@ export default function EditArticle() {
   const onFinish = (values) => {
     const tagsList = values.tags || [];
     api.putEditArticle(slug, values.title, values.description, values.body, tagsList);
-    navigate('/articles');
+    navigate(`/articles/${slug}`);
   };
   return currentArticle === null ? (
     <MagnifyingGlass
