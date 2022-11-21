@@ -3,18 +3,36 @@ import * as api from '../../api/api';
 import { Link } from 'react-router-dom';
 import { Button, Form, Input, Card, Result } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 
 export default function Profile() {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state);
+  const [isError, setIsError] = useState(false);
+  const [subStatus, setSubStatus] = useState(false);
   const getUserInfo = () => {
     if (userData.user !== null) {
       return userData.user;
     }
     return null;
   };
+  const [form] = Form.useForm();
+  useEffect(() => {
+    if (isError) {
+      const errorkeys = Object.keys(isError);
+      errorkeys.forEach((key) => {
+        form.setFields([{ name: `${key}`, errors: [`${key} ${isError[key]}`] }]);
+      });
+    }
+  }, [isError]);
   const onFinish = (values) => {
-    api.putCreatedUser(values.username, values.email, values.password, values.avatar, dispatch);
+    setSubStatus(true);
+    api
+      .putCreatedUser(values.username, values.email, values.password, values.avatar, dispatch)
+      .then((res) => {
+        setSubStatus(false);
+        return res !== true ? setIsError(res) : null;
+      });
   };
   return userData.auth === false ? (
     <Result
@@ -32,11 +50,13 @@ export default function Profile() {
       <h3>Edit Profile</h3>
       <Form
         name="normal_login"
+        form={form}
         className="login-form"
         initialValues={{
           remember: true,
           username: getUserInfo().username,
           email: getUserInfo().email,
+          password: '',
         }}
         onFinish={onFinish}
       >
@@ -117,7 +137,13 @@ export default function Profile() {
           </Form.Item>
         </label>
         <Form.Item>
-          <Button type="primary" htmlType="submit" block className="login-form-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            className="login-form-button"
+            loading={subStatus}
+          >
             Save
           </Button>
         </Form.Item>

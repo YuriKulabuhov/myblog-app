@@ -86,7 +86,7 @@ export const postNewUser = (usernameValue, emailValue, passwordValue) => {
     })
     .catch((er) => {
       errorStatus(`An error has occurred. ${er.message}`);
-      return false;
+      return er.response.data.errors;
     });
 };
 export const postLogIn = (emailValue, passwordValue, dispatch) => {
@@ -104,7 +104,11 @@ export const postLogIn = (emailValue, passwordValue, dispatch) => {
       return true;
     })
     .catch((er) => {
-      errorStatus(`An error has occurred. ${er.message}`);
+      if (er.response.status === 422) {
+        errorStatus('Email or password is invalid');
+      } else {
+        errorStatus(`An error has occurred. ${er.message}`);
+      }
       return false;
     });
 };
@@ -129,7 +133,12 @@ export const putCreatedUser = (usernameValue, emailValue, passwordValue, imageVa
       dispatch(actions.postUserLogIn(res.data.user));
       localStorage.token = res.data.user.token;
     })
-    .catch((er) => errorStatus(`An error has occurred. ${er.message}`));
+    .catch((er) => {
+      if (er.response.status === 422) {
+        return er.response.data.errors;
+      }
+      errorStatus(`An error has occurred. ${er.message}`);
+    });
 };
 export const putEditArticle = (slug, titleValue, descriptionValue, bodyValue, tagsListValue) => {
   const token = localStorage.getItem('token');
@@ -159,7 +168,7 @@ export const deleteArticlesItem = (slug) => {
     .delete(`https://blog.kata.academy/api/articles/${slug}`, {
       headers: { Authorization: `Token ${token}` },
     })
-    .then((res) => {
+    .then(() => {
       successStatus('Aricle deleted');
     })
     .catch((er) => errorStatus(`An error has occurred. ${er.message}`));

@@ -1,7 +1,7 @@
 import classes from './CreateArticle.module.scss';
 import * as api from '../../../api/api';
 import { useNavigate, Link } from 'react-router-dom';
-
+import { useState } from 'react';
 import { Button, Form, Input, Card, Space, Result } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -9,9 +9,13 @@ import { useSelector } from 'react-redux';
 export default function CreateArticle() {
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state);
+  const [subStatus, setSubStatus] = useState(false);
   const onFinish = (values) => {
+    setSubStatus(true);
     const tagsList = values.tags || [];
-    api.postNewArticle(values.title, values.description, values.body, tagsList);
+    api
+      .postNewArticle(values.title, values.description, values.body, tagsList)
+      .then((res) => setSubStatus(false));
     navigate('/articles');
   };
   return !userData.auth ? (
@@ -107,7 +111,7 @@ export default function CreateArticle() {
           </Form.List>
         </label>
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" block loading={subStatus}>
             Send
           </Button>
         </Form.Item>

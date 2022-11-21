@@ -3,14 +3,18 @@ import * as api from '../../../api/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Card } from 'antd';
 import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [subStatus, setSubStatus] = useState(false);
   const onFinish = (values) => {
-    api
-      .postLogIn(values.email, values.password, dispatch)
-      .then((res) => (res ? navigate('/articles') : null));
+    setSubStatus(true);
+    api.postLogIn(values.email, values.password, dispatch).then((res) => {
+      setSubStatus(false);
+      return res ? navigate('/articles') : null;
+    });
   };
   return (
     <Card className={classes.signIn__form}>
@@ -56,7 +60,13 @@ export default function SignIn() {
           </Form.Item>
         </label>
         <Form.Item>
-          <Button type="primary" htmlType="submit" block className="login-form-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            className="login-form-button"
+            loading={subStatus}
+          >
             Log in
           </Button>
           Or <Link to="/sign-up">register now!</Link>

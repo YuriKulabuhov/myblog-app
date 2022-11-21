@@ -2,14 +2,27 @@ import classes from './SignUp.module.scss';
 import * as api from '../../../api/api';
 import { Link } from 'react-router-dom';
 import { Button, Form, Input, Card, Checkbox, Result } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function SignUp() {
+  const [isError, setIsError] = useState(false);
+  const [subStatus, setSubStatus] = useState(false);
   const [successful, setSuccessful] = useState(false);
+  const [form] = Form.useForm();
+  useEffect(() => {
+    if (isError) {
+      const errorkeys = Object.keys(isError);
+      errorkeys.forEach((key) => {
+        form.setFields([{ name: `${key}`, errors: [`${key} ${isError[key]}`] }]);
+      });
+    }
+  }, [isError]);
   const onFinish = (values) => {
-    api
-      .postNewUser(values.username, values.email, values.password)
-      .then((res) => (res ? setSuccessful(true) : null));
+    setSubStatus(true);
+    api.postNewUser(values.username, values.email, values.password).then((res) => {
+      setSubStatus(false);
+      return res !== true ? setIsError(res) : setSuccessful(true);
+    });
   };
   return successful ? (
     <Result
@@ -28,9 +41,13 @@ export default function SignUp() {
       <h3>Create new account</h3>
       <Form
         name="normal_login"
+        form={form}
         className="login-form"
         initialValues={{
           remember: true,
+          username: '',
+          email: '',
+          password: '',
         }}
         onFinish={onFinish}
       >
@@ -49,6 +66,7 @@ export default function SignUp() {
                 message: 'Please input your Username!',
                 whitespace: true,
               },
+              {},
             ]}
           >
             <Input placeholder="some-username" autoComplete="on" />
@@ -133,7 +151,13 @@ export default function SignUp() {
           <Checkbox>I agree to the processing of my personal information</Checkbox>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" block className="login-form-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            className="login-form-button"
+            loading={subStatus}
+          >
             Log in
           </Button>
           Already have an account?<Link to="/sign-in"> Sign In</Link>.

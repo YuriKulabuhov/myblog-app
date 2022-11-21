@@ -4,12 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Form, Input, Card, Space, Result } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
 import { MagnifyingGlass } from 'react-loader-spinner';
 
 export default function EditArticle() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [subStatus, setSubStatus] = useState(false);
   const { slug } = useParams();
   const { currentArticle } = useSelector((state) => state.services);
   const { userData } = useSelector((state) => state);
@@ -17,8 +19,11 @@ export default function EditArticle() {
     dispatch(api.getArticlesItem(slug));
   }, [slug]);
   const onFinish = (values) => {
+    setSubStatus(true);
     const tagsList = values.tags || [];
-    api.putEditArticle(slug, values.title, values.description, values.body, tagsList);
+    api
+      .putEditArticle(slug, values.title, values.description, values.body, tagsList)
+      .then((res) => setSubStatus(false));
     navigate(`/articles/${slug}`);
   };
   return currentArticle === null ? (
@@ -120,7 +125,7 @@ export default function EditArticle() {
           </Form.List>
         </label>
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" disabled block loading={subStatus}>
             Send
           </Button>
         </Form.Item>
